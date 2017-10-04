@@ -82,6 +82,7 @@
     <Compile Include="Commands\KelexCommand.cs" />
     <Compile Include="Commands\List.cs" />
     <Compile Include="Commands\Run.cs" />
+    <Compile Include="Commands\Search.cs" />
     <Compile Include="Entities\QuestionAndAnswer.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Infraestructure\Configurations\QuestionAndAnswerConfiguration.cs" />

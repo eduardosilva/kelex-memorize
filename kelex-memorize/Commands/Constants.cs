@@ -13,5 +13,6 @@ namespace kelex_memorize.Commands
         public const string DECK_KEY = "-d";
         public const string QUESTION_ID = "-i";
         public const string VERBOSE_KEY = "-verbose";
+        public const string CRITERIA_KEY = "-c";
     }
 }
