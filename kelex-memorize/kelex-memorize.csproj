@@ -81,6 +81,7 @@
     <Compile Include="Commands\IKelexCommandParameter.cs" />
     <Compile Include="Commands\KelexCommand.cs" />
     <Compile Include="Commands\List.cs" />
+    <Compile Include="Commands\ResetNextExecution.cs" />
     <Compile Include="Commands\Run.cs" />
     <Compile Include="Commands\Search.cs" />
     <Compile Include="Entities\QuestionAndAnswer.cs" />
