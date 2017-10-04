@@ -53,7 +53,11 @@ namespace kelex_memorize.Commands
                     break;
                 }
 
+                parameter.Declared = true;
+
                 i++;
+
+                if (parameter.NotRequiredAValue) continue;
 
                 if (!(i < keysAndValues.Count))
                 {

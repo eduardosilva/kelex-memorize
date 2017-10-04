@@ -15,6 +15,9 @@ namespace kelex_memorize.Commands
         private Random random = new Random();
         private IEnumerable<LevelOption?> levels;
 
+        private string deck;
+        private bool verbose;
+
         public Run()
         {
             levels = new LevelOption?[]
@@ -26,7 +29,8 @@ namespace kelex_memorize.Commands
 
             parameters = new[]
              {
-                new KelexCommandParameter { Key = Constants.DECK_KEY, Description = "Deck identification" }
+                new KelexCommandParameter { Key = Constants.DECK_KEY, Description = "Deck identification" },
+                new KelexCommandParameter { Key = Constants.VERBOSE_KEY, Description = "Verbose", NotRequiredAValue = true },
             };
 
             cache = new QuestionAndAnswer[] { };
@@ -50,7 +54,8 @@ namespace kelex_memorize.Commands
         protected override void Execute()
         {
             var questions = new QuestionAndAnswer[] { };
-            var deck = parameters.FirstOrDefault(p => p.Key == Constants.DECK_KEY).Value;
+            deck = parameters.FirstOrDefault(p => p.Key == Constants.DECK_KEY).Value;
+            verbose = parameters.Any(p => p.Key == Constants.VERBOSE_KEY && p.Declared);
 
             do
             {
@@ -97,7 +102,7 @@ namespace kelex_memorize.Commands
             if (cache.Any())
                 return cache.Where(q => q.NextExecution == null || q.NextExecution < DateTime.Now);
 
-            using (var context = new DataContext())
+            using (var context = new DataContext(verbose))
             {
                 var query = context.QuestionsAndAnswers.AsQueryable();
 
@@ -112,7 +117,7 @@ namespace kelex_memorize.Commands
 
         private void Save(QuestionAndAnswer question)
         {
-            using (var context = new DataContext())
+            using (var context = new DataContext(verbose))
             {
                 context.QuestionsAndAnswers.Attach(question);
                 context.Entry(question).State = System.Data.Entity.EntityState.Modified;

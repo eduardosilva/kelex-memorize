@@ -14,9 +14,19 @@ namespace kelex_memorize.Infraestructure.DataAccess
     public class DataContext : DbContext
     {
         public DataContext()
+            : this(verbose: false)
         {
-            Database.Log = (s) => Debug.WriteLine(s);
-            Database.Log = (s) => Console.WriteLine(s);
+
+        }
+
+        public DataContext(bool verbose)
+        {
+            Database.Log = (l) =>
+            {
+                Debug.WriteLine(l);
+                if (verbose)
+                    Console.WriteLine(l);
+            };
         }
 
         public DbSet<QuestionAndAnswer> QuestionsAndAnswers { get; set; }

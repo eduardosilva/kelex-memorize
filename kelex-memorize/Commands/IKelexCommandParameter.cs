@@ -12,6 +12,8 @@ namespace kelex_memorize.Commands
         string Description { get; set; }
         bool Required { get; set; }
         string ErrorRequiredMessage { get; }
+        bool NotRequiredAValue { get; set; }
+        bool Declared { get; set; }
         string Value { get; set; }
     }
 
@@ -22,5 +24,9 @@ namespace kelex_memorize.Commands
         public string Description { get; set; }
         public bool Required { get; set; }
         public string ErrorRequiredMessage { get; set; }
+
+        //boolean types
+        public bool NotRequiredAValue { get; set; }
+        public bool Declared { get; set; }
     }
 }
