@@ -1,9 +1,9 @@
-namespace kelex_memorize.Migrations
+namespace kelex_memorize.Infrastructure.DataAccess.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Initialize : DbMigration
+    public partial class Initital : DbMigration
     {
         public override void Up()
         {
@@ -15,6 +15,7 @@ namespace kelex_memorize.Migrations
                         Question = c.String(nullable: false),
                         Answer = c.String(),
                         NextExecution = c.DateTime(),
+                        Level = c.Int(nullable: false),
                         Deck = c.String(),
                     })
                 .PrimaryKey(t => t.Id);

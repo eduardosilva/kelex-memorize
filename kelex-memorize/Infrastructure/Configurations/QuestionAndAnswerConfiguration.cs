@@ -8,7 +8,7 @@ using kelex_memorize.Entities;
 using System.Data.Entity.Infrastructure.Annotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace kelex_memorize.Infraestructure.Configurations
+namespace kelex_memorize.Infrastructure.Configurations
 {
     public class QuestionAndAnswerConfiguration : EntityTypeConfiguration<QuestionAndAnswer>
     {

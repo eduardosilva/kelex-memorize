@@ -57,7 +57,7 @@ namespace kelex_memorize.Commands
 
                 i++;
 
-                if (parameter.NotRequiredAValue) continue;
+                if (parameter.NotRequiredAValue && !keysAndValues.Any()) continue;
 
                 if (!(i < keysAndValues.Count))
                 {

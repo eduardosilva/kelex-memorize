@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using kelex_memorize.Entities;
-using kelex_memorize.Infraestructure.DataAccess;
+using kelex_memorize.Infrastructure.DataAccess;
 
 namespace kelex_memorize.Commands
 {
@@ -13,24 +13,28 @@ namespace kelex_memorize.Commands
         private IEnumerable<IKelexCommandParameter> parameters;
         private IEnumerable<QuestionAndAnswer> cache;
         private Random random = new Random();
-        private IEnumerable<LevelOption?> levels;
+        private IEnumerable<LevelOption> levels;
+        private DateTime? endTime;
 
         private string deck;
         private bool verbose;
 
         public Run()
         {
-            levels = new LevelOption?[]
+
+
+            levels = new LevelOption[]
             {
-                new LevelOption { Level = 0, Description = "0 - Soon ( < 1m )", Minutes = 1 },
-                new LevelOption { Level = 1, Description = "1 - Good ( < 10m )", Minutes = 10 },
-                new LevelOption { Level = 2, Description = "2 - Easy ( 4d )", Minutes = new TimeSpan(days:4,hours: 0, minutes:0, seconds:0).TotalMinutes }
+                new LevelOption { Level = 0, Description = "0 - Soon" },
+                new LevelOption { Level = 1, Description = "1 - Good" },
+                new LevelOption { Level = 2, Description = "2 - Easy" }
             };
 
             parameters = new[]
              {
                 new KelexCommandParameter { Key = Constants.DECK_KEY, Description = "Deck identification" },
                 new KelexCommandParameter { Key = Constants.VERBOSE_KEY, Description = "Verbose", NotRequiredAValue = true },
+                new KelexCommandParameter { Key = Constants.TIMER_KEY, Description = "With a Timer (default 5 minutes)", NotRequiredAValue = true },
             };
 
             cache = new QuestionAndAnswer[] { };
@@ -56,6 +60,19 @@ namespace kelex_memorize.Commands
             var questions = new QuestionAndAnswer[] { };
             deck = parameters.FirstOrDefault(p => p.Key == Constants.DECK_KEY).Value;
             verbose = parameters.Any(p => p.Key == Constants.VERBOSE_KEY && p.Declared);
+            var timerParameter = parameters.FirstOrDefault(p => p.Key == Constants.TIMER_KEY && p.Declared);
+
+            if (timerParameter != null)
+            {
+                double timerValue = 5;
+                if (!String.IsNullOrEmpty(timerParameter.Value) && !Double.TryParse(timerParameter.Value, out timerValue))
+                {
+                    Console.WriteLine("parameter -t has an invalid value");
+                    return;
+                }
+
+                endTime = DateTime.Now.AddMinutes(timerValue);
+            }
 
             do
             {
@@ -66,11 +83,11 @@ namespace kelex_memorize.Commands
                     Console.WriteLine("Congratulations! You have finished {0} for now.", String.IsNullOrWhiteSpace(deck) ? "all" : "this deck");
                     var totalSeconds = 60;
 
-                    
+
                     do
                     {
                         Console.WriteLine("Wating for: {0}", totalSeconds);
-                        System.Threading.Thread.Sleep(new TimeSpan(hours: 0, minutes: 0, seconds: 1));
+                        System.Threading.Thread.Sleep(TimeSpan.FromSeconds(1));
                         totalSeconds--;
                         Console.SetCursorPosition(0, Console.CursorTop - 1);
                     }
@@ -81,20 +98,43 @@ namespace kelex_memorize.Commands
 
                 var question = questions.ElementAt(random.Next(maxValue: questions.Count()));
 
-                Console.WriteLine("{0} - {1} - {2}", question.Id, question.Deck, question.Question.BreakInLines());
+                if (!String.IsNullOrWhiteSpace(question.Deck))
+                    Console.WriteLine("{0} - {1} - {2}", question.Id, question.Deck, question.Question.BreakInLines());
+                else
+                    Console.WriteLine("{0} - {1}", question.Id, question.Question.BreakInLines());
+
                 Console.Read();
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Answer: {0}", question.Answer.BreakInLines());
 
                 Console.ResetColor();
-                levels.ToList().ForEach(l => Console.WriteLine(l?.Description));
 
-                question.NextExecution = GetNextExecution();
-
+                CalcAndShowLevelsToAnswer(question);
+                GetNextExecution(question);
                 Save(question);
+
+                if (endTime.HasValue && DateTime.Now > endTime)
+                {
+                    Console.WriteLine("Time's up!!");
+                    return;
+                }
+
+                Console.Clear();
             }
             while (true);
+        }
+
+        private void CalcAndShowLevelsToAnswer(QuestionAndAnswer question)
+        {
+            levels.ElementAt(0).Minutes = question.Level;
+            for (int i = 1; i < levels.Count(); i++)
+            {
+                levels.ElementAt(i).Minutes = Math.Ceiling(((levels.ElementAt(i - 1).Minutes * 50) / 100) + levels.ElementAt(i - 1).Minutes);
+            }
+
+            Console.WriteLine("");
+            levels.ToList().ForEach(l => Console.WriteLine("{0} - ( {1} min. )", l.Description, l.Minutes));
         }
 
         private IEnumerable<QuestionAndAnswer> GetQuestions(string deck)
@@ -126,11 +166,10 @@ namespace kelex_memorize.Commands
             }
         }
 
-        private DateTime GetNextExecution()
+        private void GetNextExecution(QuestionAndAnswer question)
         {
             short validInformed = -1;
-            LevelOption? selectedLevel = null;
-            DateTime nextExecution;
+            LevelOption selectedLevel = null;
             do
             {
                 var line = Console.ReadLine();
@@ -143,15 +182,8 @@ namespace kelex_memorize.Commands
 
             } while (selectedLevel == null);
 
-            nextExecution = DateTime.Now.AddMinutes(selectedLevel.Value.Minutes);
-            return nextExecution;
-        }
+            question.SetLevel((int)selectedLevel.Minutes);
 
-        public struct LevelOption
-        {
-            public short Level { get; set; }
-            public double Minutes { get; set; }
-            public string Description { get; set; }
         }
     }
 }

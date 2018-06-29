@@ -11,6 +11,7 @@
     <AssemblyName>kelex-memorize</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -23,7 +24,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -84,15 +84,16 @@
     <Compile Include="Commands\ResetNextExecution.cs" />
     <Compile Include="Commands\Run.cs" />
     <Compile Include="Commands\Search.cs" />
+    <Compile Include="Entities\Level.cs" />
     <Compile Include="Entities\QuestionAndAnswer.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Infraestructure\Configurations\QuestionAndAnswerConfiguration.cs" />
-    <Compile Include="Infraestructure\DataAccess\DataContext.cs" />
-    <Compile Include="Migrations\201710021944361_Initialize.cs" />
-    <Compile Include="Migrations\201710021944361_Initialize.Designer.cs">
-      <DependentUpon>201710021944361_Initialize.cs</DependentUpon>
+    <Compile Include="Infrastructure\Configurations\QuestionAndAnswerConfiguration.cs" />
+    <Compile Include="Infrastructure\DataAccess\DataContext.cs" />
+    <Compile Include="Infrastructure\DataAccess\Migrations\201806131940397_Initital.cs" />
+    <Compile Include="Infrastructure\DataAccess\Migrations\201806131940397_Initital.Designer.cs">
+      <DependentUpon>201806131940397_Initital.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Infrastructure\DataAccess\Migrations\Configuration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -124,8 +125,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201710021944361_Initialize.resx">
-      <DependentUpon>201710021944361_Initialize.cs</DependentUpon>
+    <EmbeddedResource Include="Infrastructure\DataAccess\Migrations\201806131940397_Initital.resx">
+      <DependentUpon>201806131940397_Initital.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

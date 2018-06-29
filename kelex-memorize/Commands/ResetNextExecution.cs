@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using kelex_memorize.Infraestructure.DataAccess;
+using kelex_memorize.Infrastructure.DataAccess;
 
 namespace kelex_memorize.Commands
 {
@@ -55,7 +55,7 @@ namespace kelex_memorize.Commands
 
                 foreach (var question in questions)
                 {
-                    question.NextExecution = null;
+                    question.SetLevel(1);
                 }
 
 

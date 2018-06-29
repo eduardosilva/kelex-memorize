@@ -1,19 +1,19 @@
-namespace kelex_memorize.Migrations
+namespace kelex_memorize.Infrastructure.DataAccess.Migrations
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<kelex_memorize.Infraestructure.DataAccess.DataContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<kelex_memorize.Infrastructure.DataAccess.DataContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "kelex_memorize.Infraestructure.DataAccess.DataContext";
+            MigrationsDirectory = @"Infrastructure\DataAccess\Migrations";
         }
 
-        protected override void Seed(kelex_memorize.Infraestructure.DataAccess.DataContext context)
+        protected override void Seed(kelex_memorize.Infrastructure.DataAccess.DataContext context)
         {
             //  This method will be called after migrating to the latest version.
 

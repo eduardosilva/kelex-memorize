@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using kelex_memorize.Entities;
 
-namespace kelex_memorize.Infraestructure.DataAccess
+namespace kelex_memorize.Infrastructure.DataAccess
 {
     public class DataContext : DbContext
     {

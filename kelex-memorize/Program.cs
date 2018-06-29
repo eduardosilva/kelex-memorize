@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using kelex_memorize.Commands;
-using kelex_memorize.Infraestructure.DataAccess;
+using kelex_memorize.Infrastructure.DataAccess;
 
 namespace kelex_memorize
 {
@@ -13,7 +15,12 @@ namespace kelex_memorize
     {
         static void Main(string[] args)
         {
-            Database.SetInitializer<DataContext>(null);
+            Console.ForegroundColor = ConsoleColor.Green;
+            var fileVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+            Console.WriteLine("Kelex Memorize v{0}", fileVersion.FileVersion);
+            Console.ResetColor();
+
+            Database.SetInitializer<DataContext>(new DropCreateDatabaseIfModelChanges<DataContext>());
 
             var commands = typeof(IKelexCommand).Assembly.GetTypes()
                                                          .Where(t => t.IsAbstract == false &&
