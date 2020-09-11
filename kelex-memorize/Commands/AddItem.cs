@@ -40,7 +40,12 @@ namespace kelex_memorize.Commands
                     return;
                 }
 
-                context.QuestionsAndAnswers.Add(new QuestionAndAnswer { Question = question, Answer = answer, Deck = deck });
+                var formatedAnswer = answer;
+				if (answer.Contains("\\n")){
+                    formatedAnswer = String.Join("\n", answer.Split(new[] { "\\n" }, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()));
+                }
+
+                context.QuestionsAndAnswers.Add(new QuestionAndAnswer { Question = question, Answer = formatedAnswer, Deck = deck });
                 context.SaveChanges();
 
                 Console.WriteLine("Question has added successfully!");
